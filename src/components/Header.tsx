@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
+import { getImageUrl } from './ImageUtils';
 
 const navLinks = [
   { label: 'Assortiment', href: '/catalog' },
@@ -22,7 +23,7 @@ export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e0e4de] bg-white px-5 py-4 sm:px-10 sm:py-5">
         <Link to="/" className="shrink-0">
-          <img src="/knaap-logo.png" alt="Knaap Horeca" className="h-9 w-auto lg:h-12" />
+          <img src={getImageUrl("knaap-logo.png")} alt="Knaap Horeca" className="h-9 w-auto lg:h-12" />
         </Link>
 
         {showSearch && (
