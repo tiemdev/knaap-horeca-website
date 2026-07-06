@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { categories } from '../data/products'
+import { getImageUrl } from './ImageUtils'
 
 export function Footer() {
   return (
     <div className="flex flex-col gap-8 bg-[#123f30] px-5 py-9 text-[#cfe0d3] sm:px-10 lg:flex-row lg:items-start lg:justify-between">
       <div className="flex max-w-[280px] flex-col gap-2">
-        <img src="/knaap-logo.png" alt="Knaap Horeca" className="h-8 w-auto opacity-90" style={{ filter: 'brightness(0) invert(1)' }} />
+        <img src={getImageUrl("knaap-logo.png")} alt="Knaap Horeca" className="h-8 w-auto opacity-90" style={{ filter: 'brightness(0) invert(1)' }} />
         <p className="mt-2 text-[12.5px] leading-relaxed text-[#a9c2ae]">
           Groothandel in dranken, food en non-food sinds 1881.
         </p>
