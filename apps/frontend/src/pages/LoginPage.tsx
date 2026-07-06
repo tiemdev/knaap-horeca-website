@@ -1,11 +1,37 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { UtilityBar } from '../components/UtilityBar'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { FormField, fieldInputClass } from '../components/FormField'
+import type { AuthRedirectState } from '../hooks/useAuthRedirect'
+import { useAuth } from '../hooks/useAuth'
+import { useState } from 'react'
+
+type LoginFormState = {
+  email: string
+  password: string
+}
 
 export function LoginPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { login } = useAuth()
+  const authState = location.state as AuthRedirectState
+  const redirect = authState?.redirect ?? null
+
+  const [loginFormState, setLoginFormState] = useState<LoginFormState>({
+    email: 'test@test.nl',
+    password: 'test1234'
+  })
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    // No backend to authenticate against yet — treat any submit as a successful login.
+    e.preventDefault()
+    login()
+    navigate(redirect ?? '/', { state: authState?.pageState })
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans">
       <UtilityBar />
@@ -20,27 +46,41 @@ export function LoginPage() {
               Log in met uw zakelijk account om groothandelsprijzen te bekijken en te bestellen.
             </p>
 
-            <form className="mt-6 flex flex-col gap-5">
+            <form className="mt-6 flex flex-col gap-5" onSubmit={handleSubmit}>
               <FormField label="E-mailadres" required>
-                <input type="email" required autoComplete="email" className={fieldInputClass} />
+                <input 
+                  type="email" 
+                  required 
+                  autoComplete="email" 
+                  className={fieldInputClass} 
+                  value={loginFormState.email}
+                  onChange={(e) => setLoginFormState({...loginFormState, email: e.target.value})}
+                />
               </FormField>
               <FormField label="Wachtwoord" required>
-                <input type="password" required autoComplete="current-password" className={fieldInputClass} />
+                <input 
+                  type="password" 
+                  required 
+                  autoComplete="current-password" 
+                  className={fieldInputClass} 
+                  value={loginFormState.password}
+                  onChange={(e) => setLoginFormState({...loginFormState, password: e.target.value})}
+                />
               </FormField>
 
               <button
                 type="submit"
-                className="flex min-h-11 items-center justify-center rounded bg-[#123f30] text-sm font-semibold text-white"
+                className="flex min-h-11 items-center justify-center rounded bg-[#123f30] text-sm font-semibold text-white cursor-pointer hover:bg-[#0f2e23] focus:outline-none focus:ring-2 focus:ring-[#123f30] focus:ring-offset-2"
               >
                 Inloggen
               </button>
             </form>
 
             <div className="mt-6 flex flex-col gap-2 border-t border-[#ececec] pt-5 text-[13.5px] text-[#5c665e]">
-              <a href="#" className="font-semibold text-[#123f30] no-underline">Wachtwoord vergeten?</a>
+              <Link to="/forgot-password" className="font-semibold text-[#123f30] no-underline">Wachtwoord vergeten?</Link>
               <span>
                 Nog geen account?{' '}
-                <Link to="/register" className="font-bold text-[#c9a34a] no-underline">Account aanvragen →</Link>
+                <Link to="/register" state={authState} className="font-bold text-[#c9a34a] no-underline">Account aanvragen →</Link>
               </span>
             </div>
           </div>

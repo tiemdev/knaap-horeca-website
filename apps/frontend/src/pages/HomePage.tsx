@@ -4,6 +4,7 @@ import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { ProductCard } from '../components/ProductCard'
 import { products } from '../data/products'
+import { useAuthRedirectState } from '../hooks/useAuthRedirect'
 
 const categories = [
   { label: 'Bier', initial: 'B', href: '/catalog/bier' },
@@ -31,6 +32,7 @@ const popularProductsArticleNumber = [
 
 export function HomePage() {
   const popularProducts = products.filter(p => popularProductsArticleNumber.includes(p.articleNumber))
+  const authRedirectState = useAuthRedirectState()
 
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans">
@@ -57,7 +59,7 @@ export function HomePage() {
             >
               Bekijk assortiment
             </Link>
-            <Link to="/register" className="flex min-h-11 items-center justify-center rounded border-2 border-white px-6.5 text-[15px] font-semibold text-white no-underline">
+            <Link to="/register" state={authRedirectState} className="flex min-h-11 items-center justify-center rounded border-2 border-white px-6.5 text-[15px] font-semibold text-white no-underline">
               Vraag een account aan
             </Link>
           </div>

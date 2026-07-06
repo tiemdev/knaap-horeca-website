@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Product } from "../data/products";
+import { useAuthRedirectState } from "../hooks/useAuthRedirect";
 
 export type ActiveFilters = {
     subcategory: SingleFilter[];
@@ -24,6 +25,8 @@ export function Filter({
     perPage: number;
     onPerPageChange: (value: number) => void;
 }) {
+    const authRedirectState = useAuthRedirectState()
+
     // Toggle one filter within a given group, then report the whole new ActiveFilters up
     function handleToggle(group: keyof ActiveFilters, name: string, checked: boolean) {
         onChange({
@@ -70,7 +73,7 @@ export function Filter({
                 <span className="text-[12.5px] leading-relaxed text-[#5c665e]">
                     Log in met uw zakelijk account om groothandelsprijzen te bekijken.
                 </span>
-                <Link to="/register" className="text-[13px] font-bold text-[#c9a34a] no-underline">Account aanvragen →</Link>
+                <Link to="/register" state={authRedirectState} className="text-[13px] font-bold text-[#c9a34a] no-underline">Account aanvragen →</Link>
             </div>
         </div>
     )

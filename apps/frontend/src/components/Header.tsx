@@ -1,6 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { getImageUrl } from './ImageUtils';
+import { useAuthRedirectState } from '../hooks/useAuthRedirect'
+import { useAuth } from '../hooks/useAuth'
 
 const navLinks = [
   { label: 'Assortiment', href: '/catalog' },
@@ -13,11 +15,19 @@ const categories = ['Bier', 'Frisdrank', 'Wijn', 'Gedistilleerd', 'Koffie', 'The
 
 export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav?: boolean; showSearch?: boolean }) {
   const location = useLocation()
+  const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const authRedirectState = useAuthRedirectState()
+  const { isLoggedIn, logout } = useAuth()
 
   const activeCategory = categories.find(c =>
     location.pathname.toLowerCase().includes(c.toLowerCase())
   ) ?? 'Bier'
+
+  function handleLogout() {
+    logout()
+    navigate(authRedirectState?.redirect ?? '/')
+  }
 
   return (
     <>
@@ -36,8 +46,23 @@ export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav
         )}
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link to="/login" className="flex min-h-11 items-center text-sm font-semibold text-[#123f30] no-underline">Inloggen</Link>
-          <Link to="/register" className="flex min-h-11 items-center rounded bg-[#123f30] px-3.5 text-sm font-semibold text-white no-underline sm:px-4.5">Account aanvragen</Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/profile" className="flex min-h-11 items-center text-sm font-semibold text-[#123f30] no-underline">Profiel</Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex min-h-11 items-center rounded bg-[#123f30] px-3.5 text-sm font-semibold text-white no-underline sm:px-4.5 cursor-pointer"
+              >
+                Uitloggen
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" state={authRedirectState} className="flex min-h-11 items-center text-sm font-semibold text-[#123f30] no-underline">Inloggen</Link>
+              <Link to="/register" state={authRedirectState} className="flex min-h-11 items-center rounded bg-[#123f30] px-3.5 text-sm font-semibold text-white no-underline sm:px-4.5">Account aanvragen</Link>
+            </>
+          )}
           {!showCategoryNav && (
             <button
               type="button"

@@ -10,26 +10,33 @@ import { ContactPage } from './pages/ContactPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { BrandsPage } from './pages/BrandsPage'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
+import { ProfilePage } from './pages/ProfilePage'
+import { AuthProvider } from './hooks/useAuth'
 
 const basename = import.meta.env.VITE_BASE_PATH.replace(/\/$/, "")
 
 function App() {
   return (
-    <BrowserRouter basename={basename}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/catalog/:category" element={<CategoryPage />} />
-        <Route path="/catalog/:category/:product" element={<ProductPage />} />
-        <Route path="/merken" element={<BrandsPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/over-ons" element={<AboutPage />} />
-        <Route path="/bezorging" element={<DeliveryInformationPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter basename={basename}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/catalog/:category" element={<CategoryPage />} />
+          <Route path="/catalog/:category/:product" element={<ProductPage />} />
+          <Route path="/merken" element={<BrandsPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/over-ons" element={<AboutPage />} />
+          <Route path="/bezorging" element={<DeliveryInformationPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

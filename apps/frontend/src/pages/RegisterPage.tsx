@@ -1,11 +1,22 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { UtilityBar } from '../components/UtilityBar'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { Breadcrumb } from '../components/Breadcrumb'
 import { FormField, fieldInputClass } from '../components/FormField'
+import type { AuthRedirectState } from '../hooks/useAuthRedirect'
 
 export function RegisterPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const authState = location.state as AuthRedirectState
+  const redirect = authState?.redirect ?? null
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    navigate(redirect ?? '/', { state: authState?.pageState })
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-white font-sans">
       <UtilityBar />
@@ -21,7 +32,7 @@ export function RegisterPage() {
               zo snel mogelijk contact met u op.
             </p>
 
-            <form className="mt-6 flex flex-col gap-5">
+            <form className="mt-6 flex flex-col gap-5" onSubmit={handleSubmit}>
               <FormField label="Bedrijfsnaam" required>
                 <input type="text" required className={fieldInputClass} />
               </FormField>
@@ -79,7 +90,7 @@ export function RegisterPage() {
 
             <div className="mt-6 border-t border-[#ececec] pt-5 text-[13.5px] text-[#5c665e]">
               Heeft u al een account?{' '}
-              <Link to="/login" className="font-bold text-[#c9a34a] no-underline">Inloggen →</Link>
+              <Link to="/login" state={authState} className="font-bold text-[#c9a34a] no-underline">Inloggen →</Link>
             </div>
           </div>
         </div>
