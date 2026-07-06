@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: knaap-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: knaap
+      POSTGRES_PASSWORD: knaap_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - knaap_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  knaap_postgres_data:

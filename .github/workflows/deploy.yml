@@ -33,12 +33,12 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build:frontend
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./apps/frontend/dist
 
   deploy:
     environment:
