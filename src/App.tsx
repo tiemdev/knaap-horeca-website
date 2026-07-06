@@ -11,9 +11,11 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { BrandsPage } from './pages/BrandsPage'
 
+const basename = import.meta.env.VITE_BASE_PATH.replace(/\/$/, "")
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/catalog" element={<CatalogPage />} />
