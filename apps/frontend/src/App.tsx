@@ -14,12 +14,10 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { AuthProvider } from './hooks/useAuth'
 
-const basename = import.meta.env.VITE_BASE_PATH.replace(/\/$/, "")
-
 function App() {
   return (
     <AuthProvider>
-      <HashRouter basename={basename}>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
