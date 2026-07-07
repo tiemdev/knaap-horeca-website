@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { getImageUrl } from './ImageUtils';
 import { AuthNavLinks } from './AuthNavLinks'
+import { CartNavLink } from './CartNavLink'
 import { categories } from '../data/products'
 
 const navLinks = [
@@ -36,6 +37,7 @@ export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav
         )}
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <CartNavLink variant="header" />
           <AuthNavLinks variant="header" />
           {!showCategoryNav && (
             <button

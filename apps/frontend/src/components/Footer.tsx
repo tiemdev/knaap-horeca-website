@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { categories } from '../data/products'
 import { getImageUrl } from './ImageUtils'
 import { AuthNavLinks } from './AuthNavLinks'
+import { CartNavLink } from './CartNavLink'
 
 export function Footer() {
   return (
@@ -25,6 +26,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-2 lg:pr-3">
           <b className="text-white">Klantenservice</b>
+          <CartNavLink variant="footer" />
           <AuthNavLinks variant="footer" />
         </div>
         <div className="flex flex-col gap-2 lg:pr-3">

@@ -4,6 +4,7 @@ import { Fragment } from "react/jsx-runtime"
 import { contentLabel, minimumOrderLabel, orderUnitLabel, packagingLabel, type Product } from "../data/products"
 import { useAuthRedirectState } from "../hooks/useAuthRedirect"
 import { useAuth } from "../hooks/useAuth"
+import { useCart } from "../hooks/useCart"
 import { PlaceholderImage } from "./PlaceholderImage"
 
 type ProductDetailState = {
@@ -19,8 +20,16 @@ export function ProductDetail({ product }: { product: Product }) {
     const [state, setState] = useState(restoredState ?? initialState)
     const authRedirectState = useAuthRedirectState(state)
     const { isLoggedIn } = useAuth()
+    const cart = useCart()
+    const [justAdded, setJustAdded] = useState(false)
 
     const selectedPackaging = product.packaging[state.packagingIndex]
+
+    function handleAddToCart() {
+        cart.addItem(product.id, state.packagingIndex, state.quantity)
+        setJustAdded(true)
+        setTimeout(() => setJustAdded(false), 1500)
+    }
 
     function decrement() {
         setState(prev => ({ ...prev, quantity: Math.max(1, prev.quantity - 1) }))
@@ -136,7 +145,13 @@ export function ProductDetail({ product }: { product: Product }) {
                             </button>
                         </div>
                         {isLoggedIn ? (
-                            <span className="flex min-h-11 w-full items-center justify-center rounded bg-[#123f30] px-5.5 text-[14.5px] font-semibold text-white sm:w-auto cursor-pointer">Toevoegen</span>
+                            <button
+                                type="button"
+                                onClick={handleAddToCart}
+                                className="flex min-h-11 w-full items-center justify-center rounded bg-[#123f30] px-5.5 text-[14.5px] font-semibold text-white sm:w-auto cursor-pointer"
+                            >
+                                {justAdded ? 'Toegevoegd ✓' : 'Toevoegen'}
+                            </button>
                         ) : (
                             <Link to="/login" state={authRedirectState} className="flex min-h-11 w-full items-center justify-center rounded bg-[#eef2ee] px-5.5 text-[14.5px] font-semibold text-[#8a938b] sm:w-auto">Toevoegen - log in</Link>
                         )}
