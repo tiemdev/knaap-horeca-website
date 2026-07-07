@@ -1,18 +1,10 @@
 import { Link } from 'react-router-dom'
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 import { categories, products } from '../data/products'
 
 export function CatalogPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={true} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/catalog', title: 'Assortiment' }]} />
-
-      <main className="flex-1">
+    <PageLayout breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/catalog', title: 'Assortiment' }]}>
         <div className="px-5 py-10 sm:px-10 sm:py-14">
           <div className="mx-auto max-w-[1120px]">
             <h1 className="m-0 text-2xl font-bold text-[#123f30] sm:text-[28px]">Assortiment</h1>
@@ -38,9 +30,6 @@ export function CatalogPage() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

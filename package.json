@@ -1,6 +1,7 @@
 {
   "name": "knaap",
   "private": true,
+  "homepage": "https://tiemdev.github.io/knaap-horeca-website/",
   "workspaces": [
     "apps/frontend"
   ],

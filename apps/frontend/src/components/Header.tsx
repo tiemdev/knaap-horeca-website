@@ -1,8 +1,8 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { getImageUrl } from './ImageUtils';
-import { useAuthRedirectState } from '../hooks/useAuthRedirect'
-import { useAuth } from '../hooks/useAuth'
+import { AuthNavLinks } from './AuthNavLinks'
+import { categories } from '../data/products'
 
 const navLinks = [
   { label: 'Assortiment', href: '/catalog' },
@@ -11,23 +11,13 @@ const navLinks = [
   { label: 'Bezorging', href: '/bezorging' },
 ]
 
-const categories = ['Bier', 'Frisdrank', 'Wijn', 'Gedistilleerd', 'Koffie', 'Thee', 'Food', 'Non-food']
-
 export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav?: boolean; showSearch?: boolean }) {
   const location = useLocation()
-  const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const authRedirectState = useAuthRedirectState()
-  const { isLoggedIn, logout } = useAuth()
 
   const activeCategory = categories.find(c =>
-    location.pathname.toLowerCase().includes(c.toLowerCase())
-  ) ?? 'Bier'
-
-  function handleLogout() {
-    logout()
-    navigate(authRedirectState?.redirect ?? '/')
-  }
+    location.pathname.toLowerCase().includes(c.label.toLowerCase())
+  )?.label ?? 'Bier'
 
   return (
     <>
@@ -46,23 +36,7 @@ export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav
         )}
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {isLoggedIn ? (
-            <>
-              <Link to="/profile" className="flex min-h-11 items-center text-sm font-semibold text-[#123f30] no-underline">Profiel</Link>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="flex min-h-11 items-center rounded bg-[#123f30] px-3.5 text-sm font-semibold text-white no-underline sm:px-4.5 cursor-pointer"
-              >
-                Uitloggen
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" state={authRedirectState} className="flex min-h-11 items-center text-sm font-semibold text-[#123f30] no-underline">Inloggen</Link>
-              <Link to="/register" state={authRedirectState} className="flex min-h-11 items-center rounded bg-[#123f30] px-3.5 text-sm font-semibold text-white no-underline sm:px-4.5">Account aanvragen</Link>
-            </>
-          )}
+          <AuthNavLinks variant="header" />
           {!showCategoryNav && (
             <button
               type="button"
@@ -95,11 +69,11 @@ export function Header({ showCategoryNav, showSearch = true }: { showCategoryNav
         <div className="flex h-12 items-center gap-8 overflow-x-auto whitespace-nowrap border-b-2 border-[#123f30] bg-white px-5 text-sm font-semibold text-[#20291f] sm:px-10">
           {categories.map(cat => (
             <Link
-              key={cat}
-              to={`/catalog/${cat.toLowerCase()}`}
-              className={`shrink-0 py-3.5 no-underline ${cat === activeCategory ? '-mb-0.5 border-b-2 border-[#c9a34a] text-[#123f30]' : 'text-[#20291f]'}`}
+              key={cat.slug}
+              to={`/catalog/${cat.slug}`}
+              className={`shrink-0 py-3.5 no-underline ${cat.label === activeCategory ? '-mb-0.5 border-b-2 border-[#c9a34a] text-[#123f30]' : 'text-[#20291f]'}`}
             >
-              {cat}
+              {cat.label}
             </Link>
           ))}
         </div>

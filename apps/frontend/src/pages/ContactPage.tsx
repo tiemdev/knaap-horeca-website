@@ -1,7 +1,4 @@
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 import { FormField, fieldInputClass } from '../components/FormField'
 
 type Location = {
@@ -31,12 +28,10 @@ const locations: Location[] = [
 
 export function ContactPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={false} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/contact', title: 'Contact' }]} />
-
-      <main className="flex-1">
+    <PageLayout
+      headerProps={{ showSearch: false }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/contact', title: 'Contact' }]}
+    >
         <div className="px-5 py-10 sm:px-10 sm:py-14">
           <div className="mx-auto flex max-w-[760px] flex-col gap-10">
             <div>
@@ -100,9 +95,6 @@ export function ContactPage() {
             </section>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route, HashRouter } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
 import { CategoryPage } from './pages/CategoryPage'
 import { ProductPage } from './pages/ProductPage'
@@ -19,7 +19,7 @@ const basename = import.meta.env.VITE_BASE_PATH.replace(/\/$/, "")
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter basename={basename}>
+      <HashRouter basename={basename}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
@@ -28,14 +28,14 @@ function App() {
           <Route path="/merken" element={<BrandsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:view?" element={<ProfilePage />} />
           <Route path="/over-ons" element={<AboutPage />} />
           <Route path="/bezorging" element={<DeliveryInformationPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   )
 }

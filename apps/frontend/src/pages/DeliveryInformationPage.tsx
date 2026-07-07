@@ -1,7 +1,4 @@
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 
 type Region = { title: string; intro: string; places: string[] }
 
@@ -40,12 +37,10 @@ const regions: Region[] = [
 
 export function DeliveryInformationPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={false} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/bezorging', title: 'Bezorging' }]} />
-
-      <main className="flex-1">
+    <PageLayout
+      headerProps={{ showSearch: false }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/bezorging', title: 'Bezorging' }]}
+    >
       <div className="px-5 py-10 sm:px-10 sm:py-14">
         <div className="mx-auto flex max-w-[760px] flex-col gap-10">
           <h1 className="m-0 text-2xl font-bold text-[#123f30] sm:text-[28px]">Bezorging</h1>
@@ -79,10 +74,6 @@ export function DeliveryInformationPage() {
           </div>
         </div>
       </div>
-
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
