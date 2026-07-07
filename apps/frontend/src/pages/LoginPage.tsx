@@ -1,12 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 import { FormField, fieldInputClass } from '../components/FormField'
 import type { AuthRedirectState } from '../hooks/useAuthRedirect'
 import { useAuth } from '../hooks/useAuth'
-import { useState } from 'react'
+import { useState, type SubmitEvent } from 'react'
 
 type LoginFormState = {
   email: string
@@ -25,7 +22,7 @@ export function LoginPage() {
     password: 'test1234'
   })
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     // No backend to authenticate against yet — treat any submit as a successful login.
     e.preventDefault()
     login()
@@ -33,12 +30,10 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={false} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/login', title: 'Inloggen' }]} />
-
-      <main className="flex-1">
+    <PageLayout
+      headerProps={{ showSearch: false }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/login', title: 'Inloggen' }]}
+    >
         <div className="flex justify-center px-5 py-10 sm:px-10 sm:py-14">
           <div className="w-full max-w-[420px] rounded-md border border-[#ececec] p-6 sm:p-8">
             <h1 className="m-0 text-2xl font-bold text-[#123f30]">Inloggen</h1>
@@ -85,9 +80,6 @@ export function LoginPage() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

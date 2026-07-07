@@ -1,30 +1,26 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Fragment } from "react/jsx-runtime";
-import { contentLabel, minimumOrderLabel, orderUnitLabel, packagingLabel, type Packaging, type Product } from "../data/products";
-import { useAuthRedirectState } from "../hooks/useAuthRedirect";
-import { useAuth } from "../hooks/useAuth";
+import { useState, type ChangeEvent } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { Fragment } from "react/jsx-runtime"
+import { contentLabel, minimumOrderLabel, orderUnitLabel, packagingLabel, type Product } from "../data/products"
+import { useAuthRedirectState } from "../hooks/useAuthRedirect"
+import { useAuth } from "../hooks/useAuth"
+import { PlaceholderImage } from "./PlaceholderImage"
 
-type ProductComponentState = {
+type ProductDetailState = {
     quantity: number
-    packaging: string
+    packagingIndex: number
 }
 
-function InitialProductComponentState(packaging: Packaging[]): ProductComponentState {
-    return {
-        quantity: 1,
-        packaging: packaging[0].form
-    }
-}
+const initialState: ProductDetailState = { quantity: 1, packagingIndex: 0 }
 
-export function ProductComponent({ product }: { product: Product }) {
+export function ProductDetail({ product }: { product: Product }) {
     const location = useLocation()
-    const restoredState = location.state as ProductComponentState | null
-    const [state, setState] = useState(restoredState ?? InitialProductComponentState(product.packaging))
+    const restoredState = location.state as ProductDetailState | null
+    const [state, setState] = useState(restoredState ?? initialState)
     const authRedirectState = useAuthRedirectState(state)
     const { isLoggedIn } = useAuth()
 
-    const unitLabels = product.packaging.map(p => orderUnitLabel(p))
+    const selectedPackaging = product.packaging[state.packagingIndex]
 
     function decrement() {
         setState(prev => ({ ...prev, quantity: Math.max(1, prev.quantity - 1) }))
@@ -34,21 +30,21 @@ export function ProductComponent({ product }: { product: Product }) {
         setState(prev => ({ ...prev, quantity: prev.quantity + 1 }))
     }
 
-    function handleQuantityChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleQuantityChange(e: ChangeEvent<HTMLInputElement>) {
         const value = Math.floor(Number(e.target.value))
         setState(prev => ({ ...prev, quantity: Number.isFinite(value) ? Math.max(1, value) : 1 }))
     }
 
-    function handlePackagingChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        setState(prev => ({ ...prev, packaging: e.target.value }))
+    function handlePackagingChange(e: ChangeEvent<HTMLSelectElement>) {
+        setState(prev => ({ ...prev, packagingIndex: Number(e.target.value) }))
     }
 
     const specs = [
-        { label: 'Inhoud', value: contentLabel(product.packaging[0]) },
-        { label: 'Verpakking', value: packagingLabel(product.packaging[0]) },
+        { label: 'Inhoud', value: contentLabel(selectedPackaging) },
+        { label: 'Verpakking', value: packagingLabel(selectedPackaging) },
         ...(product.alcoholPercentage ? [{ label: 'Alcoholpercentage', value: product.alcoholPercentage }] : []),
         { label: 'Houdbaarheid', value: product.shelfLife },
-        { label: 'Minimale afname', value: minimumOrderLabel(product.packaging[0]) },
+        { label: 'Minimale afname', value: minimumOrderLabel(selectedPackaging) },
     ]
 
     return (
@@ -57,12 +53,7 @@ export function ProductComponent({ product }: { product: Product }) {
             <div className="flex flex-col gap-8 px-5 py-7 sm:px-10 sm:pb-12 lg:flex-row lg:gap-12">
                 {/* Gallery */}
                 <div className="flex flex-col gap-3.5 lg:w-[420px] lg:shrink-0">
-                    <div
-                        className="flex h-[260px] items-center justify-center rounded-md sm:h-[380px]"
-                        style={{ background: 'repeating-linear-gradient(45deg,#e4e8e2,#e4e8e2 14px,#d8ded4 14px,#d8ded4 28px)' }}
-                    >
-                        <span className="px-4 text-center font-mono text-[13px] text-[#5c665e]">productfoto — hoofdafbeelding</span>
-                    </div>
+                    <PlaceholderImage caption="productfoto — hoofdafbeelding" className="h-[260px] rounded-md sm:h-[380px]" />
                     <div className="flex gap-2.5 overflow-x-auto">
                         {[true, false, false].map((active, i) => (
                             <div
@@ -97,7 +88,6 @@ export function ProductComponent({ product }: { product: Product }) {
                                 <Link to="/register" state={authRedirectState} className="flex min-h-11 items-center justify-center rounded bg-[#c9a34a] px-5.5 text-[14.5px] font-bold text-[#123018] no-underline">Account aanvragen</Link>
                             </div>
                         </div>
-                        
                     ) : (
                         <div className="flex flex-col gap-3 rounded-md bg-[#f6f7f5] p-5.5">
                             <div className="flex items-baseline gap-2.5">
@@ -109,13 +99,13 @@ export function ProductComponent({ product }: { product: Product }) {
                     <div className="flex flex-wrap items-center gap-3.5">
                         <span className="text-[13.5px] font-semibold text-[#20291f]">Bestellen per:</span>
                         <select
-                            value={state.packaging}
+                            value={state.packagingIndex}
                             onChange={handlePackagingChange}
                             className="min-h-11 cursor-pointer rounded border border-[#d7dcd6] bg-white px-4 text-sm font-semibold text-[#3a423b] outline-none"
                         >
-                            {unitLabels.map((unitLabel) => (
-                                <option key={unitLabel} value={unitLabel}>
-                                    {unitLabel}
+                            {product.packaging.map((packaging, i) => (
+                                <option key={i} value={i}>
+                                    {orderUnitLabel(packaging)}
                                 </option>
                             ))}
                         </select>
@@ -150,8 +140,6 @@ export function ProductComponent({ product }: { product: Product }) {
                         ) : (
                             <Link to="/login" state={authRedirectState} className="flex min-h-11 w-full items-center justify-center rounded bg-[#eef2ee] px-5.5 text-[14.5px] font-semibold text-[#8a938b] sm:w-auto">Toevoegen - log in</Link>
                         )}
-                    {/* </div>
-                        <span className="flex min-h-11 w-full items-center justify-center rounded bg-[#eef2ee] px-5.5 text-[14.5px] font-semibold text-[#8a938b] sm:w-auto">Toevoegen - log in</span> */}
                     </div>
 
                     <div className="flex flex-col gap-2.5 border-t border-[#ececec] pt-4.5">
@@ -167,8 +155,6 @@ export function ProductComponent({ product }: { product: Product }) {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
-

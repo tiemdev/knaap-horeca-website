@@ -1,17 +1,12 @@
 import { Link } from 'react-router-dom'
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 
 export function NotFoundPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={false} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '#', title: 'Pagina niet gevonden' }]} />
-
-      <main className="flex-1">
+    <PageLayout
+      headerProps={{ showSearch: false }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '#', title: 'Pagina niet gevonden' }]}
+    >
         <div className="flex flex-col items-center px-5 py-16 text-center sm:px-10 sm:py-24">
           <span className="text-[13px] font-bold uppercase tracking-[.08em] text-[#c9a34a]">Foutcode 404</span>
           <h1 className="m-0 mt-3 text-[42px] font-bold text-[#123f30] sm:text-[56px]">Pagina niet gevonden</h1>
@@ -34,9 +29,6 @@ export function NotFoundPage() {
             </Link>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

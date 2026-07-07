@@ -1,19 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { categories } from '../data/products'
 import { getImageUrl } from './ImageUtils'
-import { useAuthRedirectState } from '../hooks/useAuthRedirect'
-import { useAuth } from '../hooks/useAuth'
+import { AuthNavLinks } from './AuthNavLinks'
 
 export function Footer() {
-  const authRedirectState = useAuthRedirectState()
-  const { isLoggedIn, logout } = useAuth()
-  const navigate = useNavigate()
-
-  function handleLogout() {
-    logout()
-    navigate('/')
-  }
-
   return (
     <div className="flex flex-col gap-8 bg-[#123f30] px-5 py-9 text-[#cfe0d3] sm:px-10 lg:flex-row lg:items-start lg:justify-between">
       <div className="flex max-w-[280px] flex-col gap-2">
@@ -35,17 +25,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-2 lg:pr-3">
           <b className="text-white">Klantenservice</b>
-          {isLoggedIn ? (
-            <>
-              <Link to="/profile" className="text-[#cfe0d3] no-underline">Profiel</Link>
-              <button type="button" onClick={handleLogout} className="cursor-pointer text-left text-[#cfe0d3]">Uitloggen</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" state={authRedirectState} className="text-[#cfe0d3] no-underline">Inloggen</Link>
-              <Link to="/register" state={authRedirectState} className="text-[#cfe0d3] no-underline">Account aanvragen</Link>
-            </>
-          )}
+          <AuthNavLinks variant="footer" />
         </div>
         <div className="flex flex-col gap-2 lg:pr-3">
           <b className="text-white">Bedrijf</b>

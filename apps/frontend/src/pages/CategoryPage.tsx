@@ -1,9 +1,7 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { products, packagingLabel, categories } from '../data/products'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { PageLayout } from '../components/PageLayout'
+import { ProductCard } from '../components/ProductCard'
+import { products, categories } from '../data/products'
 import { applyFilters, Filter, filtersToParams, getActiveFiltersFromParams, type ActiveFilters } from '../components/Filter'
 import { useState } from 'react'
 
@@ -66,13 +64,10 @@ export function CategoryPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showCategoryNav />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/catalog', title: 'Assortiment' }, { url: `/catalog/${category.slug}`, title: category.label }]} />
-
-      <main className="flex-1">
-
+    <PageLayout
+      headerProps={{ showCategoryNav: true }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/catalog', title: 'Assortiment' }, { url: `/catalog/${category.slug}`, title: category.label }]}
+    >
       {/* Page header */}
       <div className="flex flex-wrap items-end justify-between gap-3 px-5 pb-6 pt-4 sm:px-10">
         <div>
@@ -139,60 +134,46 @@ export function CategoryPage() {
         )}
 
         {/* Product grid */}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', alignContent: 'start' }}>
+        <div className="grid flex-1 grid-cols-1 content-start gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {pageProducts.map(p => (
-            <Link key={p.name} to={`/catalog/${category.slug}/${p.name.split(' ').join('-').toLowerCase()}`} style={{ textDecoration: 'none' }}>
-              <div style={{ border: '1px solid #ececec', borderRadius: '6px', overflow: 'hidden' }}>
-                <div style={{
-                  height: '140px',
-                  background: 'repeating-linear-gradient(45deg,#e4e8e2,#e4e8e2 10px,#d8ded4 10px,#d8ded4 20px)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                  <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#5c665e' }}>productfoto</span>
-                </div>
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#20291f' }}>{p.name}</span>
-                  <span style={{ fontSize: '12.5px', color: '#68715e' }}>{packagingLabel(p.packaging[0])} · art. {p.articleNumber}</span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#123f30' }}>Log in voor prijzen →</span>
-                </div>
-              </div>
-            </Link>
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </div>
 
       {/* Pagination */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', padding: '0 40px 48px', fontSize: '13.5px', color: '#3a423b' }}>
-        <span
+      <div className="flex justify-center gap-2 px-10 pb-12 text-[13.5px] text-[#3a423b]">
+        <button
+          type="button"
           onClick={() => safePage > 1 && goToPage(safePage - 1)}
-          style={{ padding: '0 10px', height: '32px', display: 'flex', alignItems: 'center', borderRadius: '4px', border: '1px solid #d7dcd6', cursor: safePage > 1 ? 'pointer' : 'not-allowed', opacity: safePage > 1 ? 1 : 0.4 }}
-        >‹</span>
+          disabled={safePage <= 1}
+          className="flex h-8 items-center rounded border border-[#d7dcd6] px-2.5 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          ‹
+        </button>
 
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
-          <span
+          <button
+            type="button"
             key={n}
             onClick={() => goToPage(n)}
-            style={{
-              width: '32px', height: '32px', borderRadius: '4px',
-              background: n === safePage ? '#123f30' : undefined,
-              color: n === safePage ? '#fff' : undefined,
-              border: n === safePage ? undefined : '1px solid #d7dcd6',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: n === safePage ? 700 : undefined, cursor: 'pointer'
-            }}
-          >{n}</span>
+            className={`flex h-8 w-8 items-center justify-center rounded ${
+              n === safePage ? 'bg-[#123f30] font-bold text-white' : 'border border-[#d7dcd6]'
+            }`}
+          >
+            {n}
+          </button>
         ))}
 
-        <span
+        <button
+          type="button"
           onClick={() => safePage < totalPages && goToPage(safePage + 1)}
-          style={{ padding: '0 10px', height: '32px', display: 'flex', alignItems: 'center', borderRadius: '4px', border: '1px solid #d7dcd6', cursor: safePage < totalPages ? 'pointer' : 'not-allowed', opacity: safePage < totalPages ? 1 : 0.4 }}
-        >›</span>
+          disabled={safePage >= totalPages}
+          className="flex h-8 items-center rounded border border-[#d7dcd6] px-2.5 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          ›
+        </button>
       </div>
-
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
-

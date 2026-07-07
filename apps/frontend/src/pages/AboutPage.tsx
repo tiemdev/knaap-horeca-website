@@ -1,7 +1,4 @@
-import { UtilityBar } from '../components/UtilityBar'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
-import { Breadcrumb } from '../components/Breadcrumb'
+import { PageLayout } from '../components/PageLayout'
 
 type Block = { heading?: string; text: string }
 type Section = { title: string; blocks: Block[] }
@@ -60,36 +57,31 @@ const sections: Section[] = [
 
 export function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans">
-      <UtilityBar />
-      <Header showSearch={false} />
-      <Breadcrumb breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/over-ons', title: 'Over ons' }]} />
+    <PageLayout
+      headerProps={{ showSearch: false }}
+      breadcrumbs={[{ url: '/', title: 'Home' }, { url: '/over-ons', title: 'Over ons' }]}
+    >
+      <div className="px-5 py-10 sm:px-10 sm:py-14">
+        <div className="mx-auto flex max-w-[760px] flex-col gap-10">
+          <h1 className="m-0 text-2xl font-bold text-[#123f30] sm:text-[28px]">Over ons</h1>
 
-      <main className="flex-1">
-        <div className="px-5 py-10 sm:px-10 sm:py-14">
-          <div className="mx-auto flex max-w-[760px] flex-col gap-10">
-            <h1 className="m-0 text-2xl font-bold text-[#123f30] sm:text-[28px]">Over ons</h1>
-
-            {sections.map(section => (
-              <section key={section.title} className="flex flex-col gap-4 border-t border-[#ececec] pt-8 first:border-t-0 first:pt-0">
-                <h2 className="m-0 text-lg font-bold text-[#123f30] sm:text-xl">{section.title}</h2>
-                <div className="flex flex-col gap-4">
-                  {section.blocks.map((block, i) => (
-                    <div key={i} className="flex flex-col gap-1.5">
-                      {block.heading && (
-                        <h3 className="m-0 text-sm font-bold uppercase tracking-[.03em] text-[#68715e]">{block.heading}</h3>
-                      )}
-                      <p className="m-0 text-[13.5px] leading-relaxed text-[#3a423b]">{block.text}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          {sections.map(section => (
+            <section key={section.title} className="flex flex-col gap-4 border-t border-[#ececec] pt-8 first:border-t-0 first:pt-0">
+              <h2 className="m-0 text-lg font-bold text-[#123f30] sm:text-xl">{section.title}</h2>
+              <div className="flex flex-col gap-4">
+                {section.blocks.map((block, i) => (
+                  <div key={i} className="flex flex-col gap-1.5">
+                    {block.heading && (
+                      <h3 className="m-0 text-sm font-bold uppercase tracking-[.03em] text-[#68715e]">{block.heading}</h3>
+                    )}
+                    <p className="m-0 text-[13.5px] leading-relaxed text-[#3a423b]">{block.text}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </PageLayout>
   )
 }
